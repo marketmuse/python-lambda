@@ -5,6 +5,7 @@ import hashlib
 import json
 import logging
 import os
+import shutil
 import sys
 import time
 from collections import defaultdict
@@ -294,6 +295,22 @@ def build(
         requirements=requirements,
         local_package=local_package,
     )
+
+    # Hack for spacy
+    if 'spacy' in os.listdir(path_to_temp):
+
+        spacy_lang_model_path = os.path.join(path_to_temp, 'spacy/lang')
+
+        dirs_to_delete = [
+            'bn', 'da', 'de', 'es', 'fa', 'fi', 'fr', 'ga', 'he', 'hi', 'hr',
+            'hu', 'id', 'it', 'ja', 'nb', 'nl', 'pl', 'pt', 'ro', 'ru', 'sv',
+            'th', 'tr', 'xx', 'zh']
+
+        for f in os.listdir(spacy_lang_model_path):
+            if f in dirs_to_delete:
+                print("spacy lang {} removed".format(f))
+                shutil.rmtree(
+                    os.path.join(spacy_lang_model_path, f), ignore_errors=True)
 
     # Hack for Zope.
     if 'zope' in os.listdir(path_to_temp):
