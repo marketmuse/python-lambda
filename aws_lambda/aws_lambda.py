@@ -182,21 +182,11 @@ def upload(
     upload_s3(cfg, path_to_zip_file)
 
 
-def invoke(
+def _invoke(
     src, event_file='event.json',
     config_file='config.yaml', profile_name=None,
     verbose=False,
 ):
-    """Simulates a call to your function.
-
-    :param str src:
-        The path to your Lambda ready project (folder must contain a valid
-        config.yaml and handler module (e.g.: service.py).
-    :param str alt_event:
-        An optional argument to override which event file to use.
-    :param bool verbose:
-        Whether to print out verbose details.
-    """
     # Load and parse the config file.
     path_to_config_file = os.path.join(src, config_file)
     cfg = read_cfg(path_to_config_file, profile_name)
@@ -229,15 +219,35 @@ def invoke(
 
     # TODO: look into mocking the ``context`` variable, currently being passed
     # as None.
+    return fn(event, None)
+
+
+def invoke(
+    src, event_file='event.json',
+    config_file='config.yaml', profile_name=None,
+    verbose=False,
+):
+    """Simulates a call to your function.
+
+    :param str src:
+        The path to your Lambda ready project (folder must contain a valid
+        config.yaml and handler module (e.g.: service.py).
+    :param str alt_event:
+        An optional argument to override which event file to use.
+    :param bool verbose:
+        Whether to print out verbose details.
+    """
 
     start = time.time()
-    results = fn(event, None)
+    results = _invoke(src, event_file, config_file, profile_name, verbose)
     end = time.time()
 
     print('{0}'.format(results))
     if verbose:
-        print('\nexecution time: {:.8f}s\nfunction execution '
-              'timeout: {:2}s'.format(end - start, cfg.get('timeout', 15)))
+        # print('\nexecution time: {:.8f}s\nfunction execution '
+        #       'timeout: {:2}s'.format(end - start, cfg.get('timeout', 15)))
+        print('\nexecution time: {:.8f}s\nfunction execution '.format(
+            end - start))
 
 
 def init(src, minimal=False):
