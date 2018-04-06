@@ -312,6 +312,16 @@ def build(
                 shutil.rmtree(
                     os.path.join(spacy_lang_model_path, f), ignore_errors=True)
 
+        env_path = os.environ.get('VIRTUAL_ENV')
+        en_core_web_sm_path = os.path.join(
+            env_path, 'lib/python3.6/site-packages/en_core_web_sm')
+        en_core_web_sm_path_temp = os.path.join(path_to_temp,
+                                                'en_core_web_sm')
+        shutil.copytree(en_core_web_sm_path, en_core_web_sm_path_temp)
+        en_core_web_sm_symlink_path = os.path.join(
+            path_to_temp, 'spacy/data/en_core_web_sm')
+        os.symlink(en_core_web_sm_path_temp, en_core_web_sm_symlink_path)
+
     # Hack for Zope.
     if 'zope' in os.listdir(path_to_temp):
         print(
