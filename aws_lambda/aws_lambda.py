@@ -325,6 +325,9 @@ def build(
         env_path = os.environ.get('VIRTUAL_ENV')
         en_core_web_sm_path = os.path.join(
             env_path, 'lib/python3.6/site-packages/en_core_web_sm')
+        if not os.path.exists(en_core_web_sm_path):
+            en_core_web_sm_path = os.path.join(
+                env_path, 'lib/python3.6/dist-packages/en_core_web_sm')
         en_core_web_sm_path_temp = os.path.join(path_to_temp,
                                                 'en_core_web_sm')
         shutil.copytree(en_core_web_sm_path, en_core_web_sm_path_temp)
