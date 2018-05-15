@@ -467,7 +467,17 @@ def pip_install_to_target(path, requirements=None, local_package=None):
     packages = []
     if not requirements:
         print('Gathering pip packages')
-        packages.extend(pip.operations.freeze.freeze())
+        pip_freeze_packages = list(pip.operations.freeze.freeze())
+        mmcore_package = None
+        for package in pip_freeze_packages:
+            if "mmcore" in package:
+                mmcore_package = package
+                break
+        if mmcore_package:
+            pip_freeze_packages.remove(mmcore_package)
+        pip_freeze_packages.append(
+            "git+ssh://git@github.com/marketmuse/mmcore.git@master")
+        packages.extend(pip_freeze_packages)
     else:
         if os.path.exists(requirements):
             print('Gathering requirement packages')
