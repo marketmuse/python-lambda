@@ -469,14 +469,20 @@ def pip_install_to_target(path, requirements=None, local_package=None):
         print('Gathering pip packages')
         pip_freeze_packages = list(pip.operations.freeze.freeze())
         mmcore_package = None
+        boilerpipe_package = None
         for package in pip_freeze_packages:
             if "mmcore" in package:
                 mmcore_package = package
-                break
+            if "boilerpipe" in package:
+                boilerpipe_package = package
         if mmcore_package:
             pip_freeze_packages.remove(mmcore_package)
-        pip_freeze_packages.append(
-            "git+ssh://git@github.com/marketmuse/mmcore.git@master")
+            pip_freeze_packages.append(
+                "git+ssh://git@github.com/marketmuse/mmcore.git@master")
+        if boilerpipe_package:
+            pip_freeze_packages.remove(boilerpipe_package)
+            pip_freeze_packages.append(
+                "git+ssh://git@github.com/misja/python-boilerpipe.git@master")
         packages.extend(pip_freeze_packages)
     else:
         if os.path.exists(requirements):
