@@ -475,9 +475,9 @@ def pip_install_to_target(path, requirements=None, local_package=None):
         pip_major_version = [int(v) for v in pip.__version__.split('.')][0]
         if pip_major_version >= 10:
             from pip._internal import operations
-            pip_freeze_packages = operations.freeze.freeze()
+            pip_freeze_packages = list(operations.freeze.freeze())
         else:
-            pip_freeze_packages = pip.operations.freeze.freeze()
+            pip_freeze_packages = list(pip.operations.freeze.freeze())
         mmcore_package = None
         boilerpipe_package = None
         for package in pip_freeze_packages:
