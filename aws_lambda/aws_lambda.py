@@ -447,7 +447,12 @@ def _install_packages(path, packages):
             package = package.replace('-e ', '')
 
         print('Installing {package}'.format(package=package))
-        pip.main(['install', package, '-t', path, '--ignore-installed'])
+        pip_major_version = [int(v) for v in pip.__version__.split('.')][0]
+        if pip_major_version >= 10:
+            from pip._internal import main
+            main(['install', package, '-t', path, '--ignore-installed'])
+        else:
+            pip.main(['install', package, '-t', path, '--ignore-installed'])
 
 
 def pip_install_to_target(path, requirements=None, local_package=None):
@@ -467,7 +472,12 @@ def pip_install_to_target(path, requirements=None, local_package=None):
     packages = []
     if not requirements:
         print('Gathering pip packages')
-        pip_freeze_packages = list(pip.operations.freeze.freeze())
+        pip_major_version = [int(v) for v in pip.__version__.split('.')][0]
+        if pip_major_version >= 10:
+            from pip._internal import operations
+            pip_freeze_packages = operations.freeze.freeze()
+        else:
+            pip_freeze_packages = pip.operations.freeze.freeze()
         mmcore_package = None
         boilerpipe_package = None
         for package in pip_freeze_packages:
