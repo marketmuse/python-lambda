@@ -487,7 +487,8 @@ def pip_install_to_target(path, requirements=None, local_package=None):
                 boilerpipe_package = package
         if mmcore_package:
             pip_freeze_packages.remove(mmcore_package)
-            mmcore_branch = os.environ.get('MMCORE_BRANCH', 'master')
+            mmcore_branch = os.environ.get('MMCORE_BRANCH')
+            print('MMCORE_BRANCH', mmcore_branch)
             if mmcore_branch not in ('develop', 'master'):
                 mmcore_branch = 'master'
             pip_freeze_packages.append(
