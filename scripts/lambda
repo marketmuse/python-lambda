@@ -236,6 +236,7 @@ def cleanup(keep_last, config_file, profile):
 )
 def upload_direct(config_file, profile, path_to_zip_file):
     aws_lambda.upload_direct(
+        CURRENT_DIR,
         config_file=config_file,
         path_to_zip_file=path_to_zip_file,
         profile_name=profile
