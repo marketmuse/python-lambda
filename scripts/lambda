@@ -259,7 +259,7 @@ def upload_direct(config_file, profile, path_to_zip_file):
     help='AWS profile to use.',
 )
 def deploy_s3_package(config_file, profile, path_to_zip_file):
-    aws_lambda.upload_direct(
+    aws_lambda.deploy_s3_package(
         CURRENT_DIR,
         config_file=config_file,
         path_to_zip_file=path_to_zip_file,
