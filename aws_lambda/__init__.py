@@ -4,7 +4,7 @@ __author__ = 'Nick Ficano'
 __email__ = 'nficano@gmail.com'
 __version__ = '3.2.3'
 
-from .aws_lambda import deploy, deploy_s3, invoke, init, build, upload, cleanup_old_versions, upload_direct
+from .aws_lambda import deploy, deploy_s3, invoke, init, build, upload, cleanup_old_versions, upload_direct, deploy_s3_package
 
 # Set default logging handler to avoid "No handler found" warnings.
 import logging

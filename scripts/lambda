@@ -243,6 +243,29 @@ def upload_direct(config_file, profile, path_to_zip_file):
     )
 
 
+@click.command(help='Deploy specific deployment package.')
+@click.option(
+    '--path_to_zip_file',
+    # default='event.json',
+    help='Alternate event file.',
+)
+@click.option(
+    '--config-file',
+    default='config.yaml',
+    help='Alternate config file.',
+)
+@click.option(
+    '--profile',
+    help='AWS profile to use.',
+)
+def deploy_s3_package(config_file, profile, path_to_zip_file):
+    aws_lambda.upload_direct(
+        CURRENT_DIR,
+        config_file=config_file,
+        path_to_zip_file=path_to_zip_file,
+        profile_name=profile
+    )
+
 if __name__ == '__main__':
     cli.add_command(init)
     cli.add_command(invoke)
@@ -252,4 +275,5 @@ if __name__ == '__main__':
     cli.add_command(build)
     cli.add_command(cleanup)
     cli.add_command(upload_direct)
+    cli.add_command(deploy_s3_package)
     cli()

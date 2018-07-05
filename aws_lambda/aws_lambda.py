@@ -153,6 +153,25 @@ def deploy_s3(
         create_function(cfg, path_to_zip_file, use_s3=use_s3, s3_file=s3_file)
 
 
+def deploy_s3_package(
+    src, path_to_zip_file=None,
+    config_file='config.yaml', profile_name=None,
+):
+    path_to_config_file = os.path.join(src, config_file)
+
+    cfg = read_cfg(path_to_config_file, profile_name)
+
+    use_s3 = True
+    s3_file = upload_s3(cfg, path_to_zip_file, use_s3)
+    existing_config = get_function_config(cfg)
+
+    if existing_config:
+        update_function(cfg, path_to_zip_file, existing_config, use_s3=use_s3,
+                        s3_file=s3_file)
+    else:
+        create_function(cfg, path_to_zip_file, use_s3=use_s3, s3_file=s3_file)
+
+
 def upload_direct(src, config_file='config.yaml', profile_name=None, path_to_zip_file=None):
 
     path_to_config_file = os.path.join(src, config_file)
