@@ -219,6 +219,29 @@ def cleanup(keep_last, config_file, profile):
     )
 
 
+@click.command(help='Upload specific deployment package.')
+@click.option(
+    '--path_to_zip_file',
+    # default='event.json',
+    help='Alternate event file.',
+)
+@click.option(
+    '--config-file',
+    default='config.yaml',
+    help='Alternate config file.',
+)
+@click.option(
+    '--profile',
+    help='AWS profile to use.',
+)
+def upload_direct(config_file, profile_name, path_to_zip_file):
+    aws_lambda.upload_direct(
+        config_file=config_file,
+        path_to_zip_file=path_to_zip_file,
+        profile_name=profile
+    )
+
+
 if __name__ == '__main__':
     cli.add_command(init)
     cli.add_command(invoke)
@@ -227,4 +250,5 @@ if __name__ == '__main__':
     cli.add_command(deploy_s3)
     cli.add_command(build)
     cli.add_command(cleanup)
+    cli.add_command(upload_direct)
     cli()
