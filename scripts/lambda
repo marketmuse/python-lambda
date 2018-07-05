@@ -234,7 +234,7 @@ def cleanup(keep_last, config_file, profile):
     '--profile',
     help='AWS profile to use.',
 )
-def upload_direct(config_file, profile_name, path_to_zip_file):
+def upload_direct(config_file, profile, path_to_zip_file):
     aws_lambda.upload_direct(
         config_file=config_file,
         path_to_zip_file=path_to_zip_file,
