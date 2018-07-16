@@ -469,18 +469,28 @@ def _install_packages(path, packages):
     def _filter_blacklist(package):
         blacklist = ['-i', '#', 'Python==', 'python-lambda==']
         return all(package.startswith(entry) is False for entry in blacklist)
+
     filtered_packages = filter(_filter_blacklist, packages)
+
     for package in filtered_packages:
         if package.startswith('-e '):
             package = package.replace('-e ', '')
 
         print('Installing {package}'.format(package=package))
+
         pip_major_version = [int(v) for v in pip.__version__.split('.')][0]
         if pip_major_version >= 10:
             from pip._internal import main
             main(['install', package, '-t', path, '--ignore-installed'])
         else:
-            pip.main(['install', package, '-t', path, '--ignore-installed'])
+            # NOTE: install with
+            if 'mmdata.git' in package:
+                print('Installing mmdata with --process-dependency-links flag!')
+                pip.main(['install', package, '-t', path,
+                          '--process-dependency-links'])
+            else:
+                pip.main(['install', package, '-t',
+                          path, '--ignore-installed'])
 
 
 def pip_install_to_target(path, requirements=None, local_package=None):
