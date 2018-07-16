@@ -536,7 +536,7 @@ def pip_install_to_target(path, requirements=None, local_package=None):
                 print('Set default MMDATA_BRANCH: %s' % mmdata_branch)
             pip_freeze_packages.append(
                 "git+ssh://git@github.com/marketmuse/mmdata.git@{}".format(
-                    mmcore_branch))
+                    mmdata_branch))
 
         if boilerpipe_package:
             pip_freeze_packages.remove(boilerpipe_package)
