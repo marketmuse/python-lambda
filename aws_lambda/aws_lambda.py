@@ -513,15 +513,31 @@ def pip_install_to_target(path, requirements=None, local_package=None):
                 mmcore_package = package
             if "boilerpipe" in package:
                 boilerpipe_package = package
+            if "mmdata" in package:
+                mmdata_package = package
+
         if mmcore_package:
             pip_freeze_packages.remove(mmcore_package)
             mmcore_branch = os.environ.get('MMCORE_BRANCH')
             print('MMCORE_BRANCH', mmcore_branch)
             if mmcore_branch not in ('develop', 'master'):
                 mmcore_branch = 'master'
+                print('Set default MMCORE_BRANCH: %s' % mmcore_branch)
             pip_freeze_packages.append(
                 "git+ssh://git@github.com/marketmuse/mmcore.git@{}".format(
                     mmcore_branch))
+
+        if mmdata_package:
+            pip_freeze_packages.remove(mmdata_package)
+            mmdata_branch = os.environ.get('MMDATA_BRANCH')
+            print('MMDATA_BRANCH', mmdata_branch)
+            if mmdata_branch not in ('develop', 'master'):
+                mmdata_branch = 'master'
+                print('Set default MMDATA_BRANCH: %s' % mmdata_branch)
+            pip_freeze_packages.append(
+                "git+ssh://git@github.com/marketmuse/mmdata.git@{}".format(
+                    mmcore_branch))
+
         if boilerpipe_package:
             pip_freeze_packages.remove(boilerpipe_package)
             pip_freeze_packages.append(
