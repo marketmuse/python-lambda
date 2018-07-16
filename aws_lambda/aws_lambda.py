@@ -508,24 +508,15 @@ def pip_install_to_target(path, requirements=None, local_package=None):
             pip_freeze_packages = list(pip.operations.freeze.freeze())
         mmcore_package = None
         boilerpipe_package = None
+        mmdata_package = None
         for package in pip_freeze_packages:
+            print(package)
             if "mmcore" in package:
                 mmcore_package = package
             if "boilerpipe" in package:
                 boilerpipe_package = package
             if "mmdata" in package:
                 mmdata_package = package
-
-        if mmcore_package:
-            pip_freeze_packages.remove(mmcore_package)
-            mmcore_branch = os.environ.get('MMCORE_BRANCH')
-            print('MMCORE_BRANCH', mmcore_branch)
-            if mmcore_branch not in ('develop', 'master'):
-                mmcore_branch = 'master'
-                print('Set default MMCORE_BRANCH: %s' % mmcore_branch)
-            pip_freeze_packages.append(
-                "git+ssh://git@github.com/marketmuse/mmcore.git@{}".format(
-                    mmcore_branch))
 
         if mmdata_package:
             pip_freeze_packages.remove(mmdata_package)
@@ -537,6 +528,17 @@ def pip_install_to_target(path, requirements=None, local_package=None):
             pip_freeze_packages.append(
                 "git+ssh://git@github.com/marketmuse/mmdata.git@{}".format(
                     mmdata_branch))
+
+        if mmcore_package and not mmdata_package:
+            pip_freeze_packages.remove(mmcore_package)
+            mmcore_branch = os.environ.get('MMCORE_BRANCH')
+            print('MMCORE_BRANCH', mmcore_branch)
+            if mmcore_branch not in ('develop', 'master'):
+                mmcore_branch = 'master'
+                print('Set default MMCORE_BRANCH: %s' % mmcore_branch)
+            pip_freeze_packages.append(
+                "git+ssh://git@github.com/marketmuse/mmcore.git@{}".format(
+                    mmcore_branch))
 
         if boilerpipe_package:
             pip_freeze_packages.remove(boilerpipe_package)
