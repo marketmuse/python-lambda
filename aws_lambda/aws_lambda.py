@@ -22,6 +22,7 @@ import yaml
 
 from .helpers import archive
 from .helpers import get_environment_variable_value
+from .helpers import get_git_sha
 from .helpers import mkdir
 from .helpers import read
 from .helpers import timestamp
@@ -845,4 +846,5 @@ def read_cfg(path_to_config_file, profile_name):
         cfg['profile'] = profile_name
     elif 'AWS_PROFILE' in os.environ:
         cfg['profile'] = os.environ['AWS_PROFILE']
+    cfg['environment_variables']['SENTRY_RELEASE_ID'] = get_git_sha
     return cfg

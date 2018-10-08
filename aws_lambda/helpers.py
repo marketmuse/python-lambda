@@ -2,6 +2,7 @@
 import datetime as dt
 import os
 import re
+import subprocess
 import zipfile
 
 
@@ -41,3 +42,11 @@ def get_environment_variable_value(val):
         if match is not None:
             env_val = os.environ.get(match.group('environment_key_name'))
     return env_val
+
+def get_git_sha():
+    """Retrieve current git sha."""
+    try:
+        sha = subprocess.check_output(['git', 'rev-parse', 'HEAD'])
+        return sha.decode('utf-8').strip()
+    except:
+        return 'UNKNOWN'
