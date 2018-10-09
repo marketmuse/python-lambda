@@ -519,6 +519,7 @@ def pip_install_to_target(path, requirements=None, local_package=None):
     packages = []
     if not requirements:
         print('Gathering pip packages')
+
         pip_major_version = [int(v) for v in pip.__version__.split('.')][0]
         if pip_major_version >= 10:
             from pip._internal import operations
@@ -562,9 +563,9 @@ def pip_install_to_target(path, requirements=None, local_package=None):
                 "git+ssh://git@github.com/marketmuse/mmcore.git@{}".format(
                     mmcore_branch))
 
-        if mmcache_package and not mmcore_package and not mmdata_package:
-            pip_freeze_packages.remove(mmcore_package)
-            mmcore_branch = os.environ.get('MMCACHE_BRANCH')
+        if mmcache_package:
+            pip_freeze_packages.remove(mmcache_package)
+            mmcache_branch = os.environ.get('MMCACHE_BRANCH')
             print('MMCACHE_BRANCH', mmcache_branch)
             if mmcache_branch not in ('develop', 'master'):
                 mmcache_branch = 'master'
