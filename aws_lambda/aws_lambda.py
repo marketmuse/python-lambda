@@ -473,13 +473,15 @@ def _install_packages(path, packages):
 
     filtered_packages = filter(_filter_blacklist, packages)
 
+    pip_major_version = [int(v) for v in pip.__version__.split('.')][0]
+    print('Pip major version: %s' % pip_major_version)
+
     for package in filtered_packages:
         if package.startswith('-e '):
             package = package.replace('-e ', '')
 
         print('Installing {package}'.format(package=package))
 
-        pip_major_version = [int(v) for v in pip.__version__.split('.')][0]
         if pip_major_version >= 10:
             from pip._internal import main
             main(['install', package, '-t', path, '--ignore-installed'])
@@ -489,6 +491,12 @@ def _install_packages(path, packages):
                 print('Installing mmdata with --process-dependency-links flag!')
                 pip.main(['install', package, '-t', path,
                           '--process-dependency-links'])
+
+            if 'mmcore.git' in package:
+                print('Installing mmcore with --process-dependency-links flag!')
+                pip.main(['install', package, '-t', path,
+                          '--process-dependency-links'])
+
             else:
                 pip.main(['install', package, '-t',
                           path, '--ignore-installed'])
@@ -584,6 +592,7 @@ def pip_install_to_target(path, requirements=None, local_package=None):
             local_package = [local_package]
         for l_package in local_package:
             packages.append(l_package)
+
     _install_packages(path, packages)
 
 
