@@ -860,5 +860,5 @@ def read_cfg(path_to_config_file, profile_name):
         cfg['profile'] = profile_name
     elif 'AWS_PROFILE' in os.environ:
         cfg['profile'] = os.environ['AWS_PROFILE']
-    cfg['environment_variables']['SENTRY_RELEASE_ID'] = get_git_sha
+    cfg['environment_variables']['SENTRY_RELEASE_ID'] = get_git_sha()
     return cfg
