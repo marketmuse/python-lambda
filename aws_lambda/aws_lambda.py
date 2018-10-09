@@ -520,8 +520,11 @@ def pip_install_to_target(path, requirements=None, local_package=None):
         mmcore_package = None
         boilerpipe_package = None
         mmdata_package = None
+        mmcache_package = None
         for package in pip_freeze_packages:
             print(package)
+            if "mmcache" in package:
+                mmcache_package = package
             if "mmcore" in package:
                 mmcore_package = package
             if "boilerpipe" in package:
@@ -550,6 +553,17 @@ def pip_install_to_target(path, requirements=None, local_package=None):
             pip_freeze_packages.append(
                 "git+ssh://git@github.com/marketmuse/mmcore.git@{}".format(
                     mmcore_branch))
+
+        if mmcache_package and not mmcore_package and not mmdata_package:
+            pip_freeze_packages.remove(mmcore_package)
+            mmcore_branch = os.environ.get('MMCACHE_BRANCH')
+            print('MMCACHE_BRANCH', mmcache_branch)
+            if mmcache_branch not in ('develop', 'master'):
+                mmcache_branch = 'master'
+                print('Set default MMCACHE_BRANCH: %s' % mmcache_branch)
+            pip_freeze_packages.append(
+                "git+ssh://git@github.com/marketmuse/mmcache.git@{}".format(
+                    mmcache_branch))
 
         if boilerpipe_package:
             pip_freeze_packages.remove(boilerpipe_package)
