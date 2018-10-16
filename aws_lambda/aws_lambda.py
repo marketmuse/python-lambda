@@ -415,6 +415,11 @@ def build(
 
             # Copy handler file into root of the packages folder.
             copyfile(f, os.path.join(path_to_temp, filename))
+
+            if filename == 'phantomjs':
+                print('Make phantomjs executable')
+                os.chmod(os.path.join(path_to_temp, filename),  0o755)
+
         elif os.path.isdir(f):
             destination_folder = os.path.join(path_to_temp, f[len(src) + 1:])
             copytree(f, destination_folder)
