@@ -486,20 +486,7 @@ def _install_packages(path, packages):
             from pip._internal import main
             main(['install', package, '-t', path, '--ignore-installed'])
         else:
-            # NOTE: install with
-            if 'mmdata.git' in package:
-                print('Installing mmdata with --process-dependency-links flag!')
-                pip.main(['install', package, '-t', path,
-                          '--process-dependency-links'])
-
-            if 'mmcore.git' in package:
-                print('Installing mmcore with --process-dependency-links flag!')
-                pip.main(['install', package, '-t', path,
-                          '--process-dependency-links'])
-
-            else:
-                pip.main(['install', package, '-t',
-                          path, '--ignore-installed'])
+            pip.main(['install', package, '-t', path, '--ignore-installed'])
 
 
 def pip_install_to_target(path, requirements=None, local_package=None):
@@ -526,58 +513,18 @@ def pip_install_to_target(path, requirements=None, local_package=None):
             pip_freeze_packages = list(operations.freeze.freeze())
         else:
             pip_freeze_packages = list(pip.operations.freeze.freeze())
-        mmcore_package = None
+
         boilerpipe_package = None
-        mmdata_package = None
-        mmcache_package = None
         for package in pip_freeze_packages:
             print(package)
-            if "mmcache" in package:
-                mmcache_package = package
-            if "mmcore" in package:
-                mmcore_package = package
             if "boilerpipe" in package:
                 boilerpipe_package = package
-            if "mmdata" in package:
-                mmdata_package = package
-
-        if mmdata_package:
-            pip_freeze_packages.remove(mmdata_package)
-            mmdata_branch = os.environ.get('MMDATA_BRANCH')
-            print('MMDATA_BRANCH', mmdata_branch)
-            if mmdata_branch not in ('develop', 'master'):
-                mmdata_branch = 'master'
-                print('Set default MMDATA_BRANCH: %s' % mmdata_branch)
-            pip_freeze_packages.append(
-                "git+ssh://git@github.com/marketmuse/mmdata.git@{}".format(
-                    mmdata_branch))
-
-        if mmcore_package and not mmdata_package:
-            pip_freeze_packages.remove(mmcore_package)
-            mmcore_branch = os.environ.get('MMCORE_BRANCH')
-            print('MMCORE_BRANCH', mmcore_branch)
-            if mmcore_branch not in ('develop', 'master'):
-                mmcore_branch = 'master'
-                print('Set default MMCORE_BRANCH: %s' % mmcore_branch)
-            pip_freeze_packages.append(
-                "git+ssh://git@github.com/marketmuse/mmcore.git@{}".format(
-                    mmcore_branch))
-
-        if mmcache_package:
-            pip_freeze_packages.remove(mmcache_package)
-            mmcache_branch = os.environ.get('MMCACHE_BRANCH')
-            print('MMCACHE_BRANCH', mmcache_branch)
-            if mmcache_branch not in ('develop', 'master'):
-                mmcache_branch = 'master'
-                print('Set default MMCACHE_BRANCH: %s' % mmcache_branch)
-            pip_freeze_packages.append(
-                "git+ssh://git@github.com/marketmuse/mmcache.git@{}".format(
-                    mmcache_branch))
 
         if boilerpipe_package:
             pip_freeze_packages.remove(boilerpipe_package)
             pip_freeze_packages.append(
                 "git+ssh://git@github.com/misja/python-boilerpipe.git@master")
+
         packages.extend(pip_freeze_packages)
     else:
         if os.path.exists(requirements):
